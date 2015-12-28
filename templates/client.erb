@@ -19,22 +19,13 @@ persist-key
 <% if @persist_tun -%>
 persist-tun
 <% end -%>
-<% if @cipher -%>
+<% if @cipher  -%>
 cipher <%= @cipher %>
-<% end -%>
-<% if @tls_cipher -%>
-tls-cipher <%= @tls_cipher %>
-<% end -%>
+<% end %>
 <% if @mute_replay_warnings -%>
 mute-replay-warnings
 <% end -%>
 ns-cert-type server
-<% if @sndbuf -%>
-sndbuf <%= @sndbuf %>
-<% end -%>
-<% if @rcvbuf -%>
-rcvbuf <%= @rcvbuf %>
-<% end -%>
 verb <%= @verb %>
 mute <%= @mute %>
 <% if @pam || @authuserpass -%>
@@ -54,20 +45,4 @@ up "<%= @up %>"
 <% end -%>
 <% if @down != '' -%>
 down "<%= @down %>"
-<% end -%>
-<% if @tls_auth -%>
-
-# tls authentification
-tls-client
-tls-auth keys/<%= @name %>/ta.key 1
-<% end -%>
-<% if @x509_name -%>
-
-# x509 name verification
-verify-x509-name "<%= @x509_name %>" name
-<% end -%>
-
-# Additional custom options
-<% @custom_options.each_pair do |key, value| -%>
-<%= key %> <%= value %>
 <% end -%>

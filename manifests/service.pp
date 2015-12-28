@@ -9,13 +9,14 @@
 #
 # === Authors
 #
+# * Rafael Chicoli <mailto:rafael_chicoli@yahoo.com.br>
 # * Raffael Schmid <mailto:raffael@yux.ch>
 # * John Kinsella <mailto:jlkinsel@gmail.com>
 # * Justin Lambert <mailto:jlambert@letsevenup.com>
 #
 # === License
 #
-# Copyright 2013 Raffael Schmid, <raffael@yux.ch>
+# Copyright 2013 Rafael Chicoli, <rafael_chicoli@yahoo.com.br>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,13 +30,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class openvpn::service {
-  if $::openvpn::manage_service and !$::openvpn::params::namespecific_rclink {
-    service { 'openvpn':
-      ensure     => running,
-      enable     => true,
-      hasrestart => true,
-      hasstatus  => true,
-    }
+class openvpn::service inherits openvpn {
+
+  service {
+    "${service_name}":
+      ensure     => $service_ensure,
+      enable     => $service_enable,
+      hasrestart => $service_hasrestart,
+      hasstatus  => $service_hasstatus,
   }
 }

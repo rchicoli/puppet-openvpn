@@ -15,31 +15,18 @@
 #
 # [*iroute*]
 #   Array.  Array of iroute combinations.
-#   Default: []
-#
-# [*iroute_ipv6*]
-#   Array.  Array of IPv6 iroute combinations.
-#   Default: []
 #
 # [*route*]
 #   Array.  Array of route combinations pushed to client.
-#   Default: []
 #
 # [*ifconfig*]
 #   String.  IP configuration to push to the client.
-#   Default: false
 #
 # [*dhcp_options]
 #   Array.  DHCP options to push to the client.
-#   Default: []
 #
 # [*redirect_gateway]
 #   Array.  Redirect all traffic to gateway
-#   Default: false
-#
-# [*ensure]
-#   Keyword. Sets the client specific configuration file status (present or absent)
-#   Default: present
 #
 #
 # === Examples
@@ -52,17 +39,15 @@
 #       dhcp_options => ['DNS 8.8.8.8']
 #    }
 #
-# * Removal:
-#     Use $ensure => absent
-#
 #
 # === Authors
 #
+# * Rafael Chicoli <mailto:rafael_chicoli@yahoo.com.br>
 # * Raffael Schmid <mailto:raffael@yux.ch>
 #
 # === License
 #
-# Copyright 2013 Raffael Schmid, <raffael@yux.ch>
+# Copyright 2013 Rafael Chicoli, <rafael_chicoli@yahoo.com.br>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -77,22 +62,20 @@
 # limitations under the License.
 #
 define openvpn::client_specific_config(
-  $server,
-  $ensure           = present,
-  $iroute           = [],
-  $iroute_ipv6      = [],
-  $route            = [],
-  $ifconfig         = false,
   $dhcp_options     = [],
+  $ifconfig         = false,
+  $iroute           = [],
   $redirect_gateway = false,
+  $route            = [],
+  $server,
 ) {
 
   Openvpn::Server[$server] ->
   Openvpn::Client[$name] ->
   Openvpn::Client_specific_config[$name]
 
-  file { "${::openvpn::params::etc_directory}/openvpn/${server}/client-configs/${name}":
-    ensure  => $ensure,
+  file { "/etc/openvpn/${server}/client-configs/${name}":
+    ensure  => present,
     content => template('openvpn/client_specific_config.erb')
   }
 

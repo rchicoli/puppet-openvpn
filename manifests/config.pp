@@ -9,13 +9,14 @@
 #
 # === Authors
 #
+# * Rafael Chicoli <mailto:rafael_chicoli@yahoo.com.br>
 # * Raffael Schmid <mailto:raffael@yux.ch>
 # * John Kinsella <mailto:jlkinsel@gmail.com>
 # * Justin Lambert <mailto:jlambert@letsevenup.com>
 #
 # === License
 #
-# Copyright 2013 Raffael Schmid, <raffael@yux.ch>
+# Copyright 2013 Rafael Chicoli, <rafael_chicoli@yahoo.com.br>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,20 +30,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class openvpn::config {
+class openvpn::config inherits openvpn {
 
   if $::osfamily == 'Debian' {
-    concat { '/etc/default/openvpn':
-      owner => root,
-      group => $openvpn::params::root_group,
-      mode  => '0644',
-      warn  => true,
+    concat { 
+      "${openvpn_default_dir}":
+        owner  => root,
+        group  => root,
+        mode   => 644,
+        warn   => true;
     }
 
-    concat::fragment { 'openvpn.default.header':
-      content => template('openvpn/etc-default-openvpn.erb'),
-      target  => '/etc/default/openvpn',
-      order   => '01',
+    concat::fragment { 
+      'openvpn.default.header':
+        content => template('openvpn/etc-default-openvpn.erb'),
+        target  => "${openvpn_default_dir}",
+        order   => 01;
     }
   }
 }

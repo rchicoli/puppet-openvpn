@@ -11,13 +11,14 @@
 #
 # === Authors
 #
+# * Rafael Chicoli <mailto:rafael_chicoli@yahoo.com.br>
 # * Raffael Schmid <mailto:raffael@yux.ch>
 # * John Kinsella <mailto:jlkinsel@gmail.com>
 # * Justin Lambert <mailto:jlambert@letsevenup.com>
 #
 # === License
 #
-# Copyright 2013 Raffael Schmid, <raffael@yux.ch>
+# Copyright 2013 Rafael Chicoli, <rafael_chicoli@yahoo.com.br>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,16 +32,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class openvpn::install inherits ::openvpn::params {
+class openvpn::install inherits openvpn {
 
-  ensure_packages(['openvpn'])
-  if $::openvpn::params::additional_packages != undef {
-    ensure_packages( any2array($::openvpn::params::additional_packages) )
+  ensure_packages($package_name)
+  if $additional_packages != undef {
+    ensure_packages( any2array($additional_packages) )
   }
 
   file {
-    [ "${::openvpn::params::etc_directory}/openvpn", "${::openvpn::params::etc_directory}/openvpn/keys", '/var/log/openvpn', ]:
-      ensure  => directory,
-      require => Package['openvpn'];
+    [ "${openvpn_root_dir}" ]:
+      ensure  => $openvpn_dir_ensure,
+      require => Package[$package_name];
   }
 }

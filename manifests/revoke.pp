@@ -29,11 +29,12 @@
 #
 # === Authors
 #
+# * Rafael Chicoli <mailto:rafael_chicoli@yahoo.com.br>
 # * Alessandro Grassi <mailto:alessandro.grassi@devise.it>
 #
 # === License
 #
-# Copyright 2013 Alessandro Grassi <alessandro.grassi@devise.it>
+# Copyright 2013 Rafael Chicoli <rafael_chicoli@yahoo.com.br>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,9 +48,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-define openvpn::revoke(
-  $server,
-) {
+define openvpn::revoke($server) {
 
   Openvpn::Server[$server] ->
   Openvpn::Revoke[$name]
@@ -57,12 +56,10 @@ define openvpn::revoke(
   Openvpn::Client[$name] ->
   Openvpn::Revoke[$name]
 
-  $etc_directory = $::openvpn::params::etc_directory
-
   exec { "revoke certificate for ${name} in context of ${server}":
-    command  => ". ./vars && ./revoke-full ${name}; echo \"exit $?\" | grep -qE '(error 23|exit (0|2))' && touch revoked/${name}",
-    cwd      => "${etc_directory}/openvpn/${server}/easy-rsa",
-    creates  => "${etc_directory}/openvpn/${server}/easy-rsa/revoked/${name}",
-    provider => 'shell',
+    command  => ". ./vars && ./revoke-full ${name} ; test $? -eq 2 && touch revoked/${name}",
+    cwd      => "/etc/openvpn/${server}/easy-rsa",
+    creates  => "/etc/openvpn/${server}/easy-rsa/revoked/${name}",
+    provider => 'shell';
   }
 }
